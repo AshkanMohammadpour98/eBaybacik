@@ -1,0 +1,235 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+{% load render_partial %}
+{% block title %}{{ title }}{% endblock %}
+{% block nav %}{%  render_partial 'auctions:nav' %}{% endblock %}
+{% block css %}
+     <style>
+            @import url('https://fonts.googleapis.com/css2?family=League+Spartan&display=swap');
+
+        body{
+            font-family: 'League Spartan', sans-serif;
+
+       }
+        #div-parint{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 100px;
+        }
+        .div-parint2{
+          display: flex;
+    flex-direction: row;
+    justify-content: center;
+        }
+        .div-imge{
+            width: 400px;
+            height: 400px;
+            border: 1px solid #cccc;
+            background-color: #fff;
+            margin-right: 8px;
+            border-radius: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+        #imags{
+          width: 100%;
+        }
+        .div-title{
+            width: 400px;
+        }
+
+        .a-1{
+          position: absolute;
+          right: 10px;
+        }
+        .a-2{
+           position: absolute;
+           right: 80px;
+        }
+
+        .span-Bid{
+            margin-right: 33px;
+            font-size: 13px;
+        }
+        .p-margin{
+            margin-left: 103px;
+            font-size: 13px;
+        }
+        .div-alert{
+            background-color: #febcff80;
+            padding: 7px;
+            width: 236px;
+            margin-left: 100px;
+        }
+        .div-s1{
+            box-shadow: 1px 4px 6px 0px;
+            padding: 10px;
+        }
+        h3{
+            text-align: center;
+        }
+
+        .themed-grid-col {
+    /* padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    */
+    border: 1px solid rgb(4 1 8 / 20%);
+    display: flex;
+        }
+
+        .p-p10{
+            margin-left: 10px;
+        }
+        .p-p40{
+            margin-left: 70px;
+        }
+        #daler{
+            border: 1px solid #cdccce;
+            padding: 2px 5px;
+            display: -webkit-inline-box;
+            border-radius: 3px;
+        }
+        #input-number{
+          outline: none;
+          border: 1px solid #cdccce;
+          border-radius: 3px;
+          transition: all 0.3s ease-in-out;
+        }
+        #input-number:hover{
+          border: 1px solid #37c2ff;
+        }
+        #input-btn{
+          background-color: #0d6efd;
+          color: #fff;
+          width: 100%;
+          border: 1px solid rgb(4 1 8 / 20%);
+          border-radius: 5px;
+          transition: all 0.3s ease-in-out;
+        }
+        #input-btn:hover{
+          background-color: #000000;
+        }
+        #textarea{
+          width: 400px;
+          height: 50px;
+          margin-top: 20px;
+          margin-left: 290px;
+          outline: none;
+          transition: all 0.3s ease-in-out;
+          border-radius: 3px;
+        }
+        #textarea:hover{
+          border: 1px solid #37c2ff;
+
+        }
+        #btn-submit{
+          color: #fff;
+          background-color: #0d6efd;
+          border: 1px solid #cdccce;
+          border-radius: 3px;
+          transition: all 0.3s ease-in-out;
+        }
+        #btn-submit:hover{
+          background-color: #000000;
+        }
+        .comints{
+
+          flex-direction:row;
+          margin-left: 18rem;
+          border: 1px solid #d4d4cf;
+          border-radius: 3px;
+          padding: 5px;
+          width: auto;
+        }
+        .comint-user{
+          color: #0d6efd;
+          padding: 3px;
+          margin-bottom: 0px;
+        }
+        .div-parint2-d{
+          padding: 5px 100px;
+    background: #feddff;
+    border: 1px solid #0062cc54;
+    border-radius: 3px;
+    margin-top: 10px;
+    margin-left: 20rem;
+    width: 50%;
+    margin-bottom: 20px;
+        }
+
+    </style>
+ {% endblock %}
+
+{% block body %}
+
+
+
+    <div id="div-parint">
+        <div class="div-imge">
+          <img src="{{ list.image_url}}"  alt="nat imge" id="imags">
+        </div>
+
+        <div class="div-title">
+            <div class="div-s1">
+                <span>Listing:</span> <span>Mouse Gamer</span>
+            {% if close == True %}
+                <form action="{% url 'auctions:close-listing' list.id %}" method="get">
+             <input type="submit" id="btn-close" value="Close listing">
+                </form>
+            {% endif %}
+                <br><br>
+                <span class="span-Bid">Current Bid:</span><span style="font-size: 13px; font-weight: bold">USD 101 </span>
+
+               <p class="p-margin"> {{ list.title }}</p>
+                {% if request.user.is_authenticated %}
+                <form action="{% url 'auctions:add-bid' list.id %}" method="post">
+                  {% csrf_token %}
+                  <p id="daler">$</p>
+               <input type="number" placeholder="place your bid"  name="bid" id="input-number">
+                                   <br>
+                                   <br>
+               <input type="submit" value="add to watthlist" id="input-btn">
+                    </form>
+
+                    {% else %}
+                    <p class="p-margin"> EnterUSD101 or more</p>
+               <div class="div-alert">please Logen to place your bid</div>
+                {% endif %}
+            </div>
+
+            <h3>Additional Information</h3>
+            <div class=" themed-grid-col"><p class="p-p10">Catagory</p> <p class="p-p40">
+                {% for cat in list.category.all %}
+                    {{ cat.title }}
+                {% endfor %}
+            </p></div>
+            <div class=" themed-grid-col"><p class="p-p10">Start Price</p> <p class="p-p40">${{ list.Initial_price }}</p></div>
+            <div class=" themed-grid-col"><p class="p-p10">Description</p> <p class="p-p40">{{ list.descriptions|linebreaks }}</p></div>
+            <div class=" themed-grid-col"><p class="p-p10">Who Created</p> <p class="p-p40">{{ list.created_user.username }}</p></div>
+        </div>
+    </div>
+      {% if request.user.is_authenticated %}
+    <form method="post">
+    {% csrf_token %}
+      <textarea name="text-comment" id="textarea" cols="30" rows="10" placeholder="add a commint"></textarea>
+      <input type="submit" value="submit" id="btn-submit">
+    </form>
+          {% else %}
+    <div id="div-parint2">
+        <div class="themed-grid-col2 div-parint2-d">Login to comment</div>
+    </div>
+      {% endif %}
+    {% for comment in comments %}
+        <div style="display:flex;">
+        <div class="comints">
+          <p style="margin-bottom: 0px;">{{ comment.user.username }}:</p><p class="comint-user">{{ comment.text }}</p>
+        </div>
+      </div>
+
+    {% endfor %}
+        
+  
+{% endblock %}
